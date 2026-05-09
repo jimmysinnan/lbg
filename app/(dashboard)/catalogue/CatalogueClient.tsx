@@ -14,13 +14,14 @@ export function CatalogueClient({ initialProducts }: { initialProducts: Product[
     // Optimistic update
     setProducts(prev => prev.map(p => p.id === id ? { ...p, available } : p))
     try {
-      await fetch(`/api/catalogue/${id}`, {
+      const res = await fetch(`/api/catalogue/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ available }),
       })
+      if (!res.ok) throw new Error('Erreur API')
     } catch {
-      // Rollback
+      // Rollback si erreur réseau OU erreur serveur
       setProducts(prev => prev.map(p => p.id === id ? { ...p, available: !available } : p))
     }
   }
