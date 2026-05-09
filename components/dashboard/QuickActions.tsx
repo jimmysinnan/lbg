@@ -25,13 +25,15 @@ export function QuickActions() {
       })
       const data = await res.json() as BatchResult
       setResult(data)
+      // Recharger seulement en cas de succès, après délai pour lire le feedback
+      if (!data.error) {
+        setTimeout(() => window.location.reload(), 2500)
+      }
     } catch {
       setResult({ success: 0, error: 'Erreur réseau — réessayez' })
     } finally {
       setLoading(false)
       setModal(null)
-      // Rafraîchir la page pour mettre à jour les KPIs
-      window.location.reload()
     }
   }
 
