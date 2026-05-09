@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase'
 import { todayISO } from '@/lib/utils'
 import { KPICard } from '@/components/dashboard/KPICard'
 import { OrderPipeline } from '@/components/dashboard/OrderPipeline'
+import { QuickActions } from '@/components/dashboard/QuickActions'
 import type { Order } from '@/types'
 
 async function getTodayOrders(): Promise<Order[]> {
@@ -60,10 +61,8 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Actions rapides — placeholder pour T13 */}
-      <div id="quick-actions-placeholder" className="bg-white border border-gray-200 rounded-lg p-4">
-        <p className="text-sm text-gray-400">Actions rapides (T13)</p>
-      </div>
+      {/* Actions rapides */}
+      <QuickActions />
 
       {/* Pipeline */}
       <div>
