@@ -40,13 +40,14 @@ export async function POST(request: NextRequest) {
   const messages = value?.messages as Array<Record<string, unknown>> | undefined
   const message = messages?.[0]
 
+  const messageBody = (message?.text as { body?: string } | undefined)?.body
+
   // Ignorer les non-messages (statuts, notifications, etc.)
-  if (!message || message.type !== 'text') {
+  if (!message || message.type !== 'text' || !messageBody) {
     return NextResponse.json({ status: 'ignored' })
   }
 
   const phone = message.from as string
-  const messageBody = (message.text as { body: string }).body
   const waMessageId = message.id as string
   const timestamp = new Date(parseInt(message.timestamp as string) * 1000).toISOString()
 
