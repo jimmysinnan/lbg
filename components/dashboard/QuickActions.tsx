@@ -1,12 +1,22 @@
 'use client'
 import { useState } from 'react'
-import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 
-interface BatchResult {
-  success: number
-  total?: number
-  error?: string
+interface BatchResult { success: number; total?: number; error?: string }
+
+const actionStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+  padding: '12px 16px',
+  borderRadius: '12px',
+  border: '1px solid var(--bord2)',
+  background: '#fff',
+  cursor: 'pointer',
+  transition: 'all 0.15s',
+  textAlign: 'left',
+  width: '100%',
+  fontFamily: 'var(--sans)',
 }
 
 export function QuickActions() {
@@ -25,99 +35,103 @@ export function QuickActions() {
       })
       const data = await res.json() as BatchResult
       setResult(data)
-      // Recharger seulement en cas de succès, après délai pour lire le feedback
-      if (!data.error) {
-        setTimeout(() => window.location.reload(), 2500)
-      }
+      if (!data.error) setTimeout(() => window.location.reload(), 2500)
     } catch {
-      setResult({ success: 0, error: 'Erreur réseau — réessayez' })
+      setResult({ success: 0, error: 'Erreur réseau' })
     } finally {
       setLoading(false)
       setModal(null)
     }
   }
 
-  const handleExportExcel = () => {
+  const handleExport = () => {
     const today = new Date().toISOString().slice(0, 10)
-    const link = document.createElement('a')
-    link.href = `/api/export/excel?date=${today}`
-    link.download = `lbg-${today}.xlsx`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const a = document.createElement('a')
+    a.href = `/api/export/excel?date=${today}`
+    a.download = `lbg-${today}.xlsx`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
     setModal(null)
   }
 
   return (
     <>
-      {/* Boutons d'action */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">Actions rapides</h2>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => setModal('valider')}
-            variant="primary"
-          >
-            Valider toutes les commandes OK
-          </Button>
-          <Button
-            onClick={() => setModal('export')}
-            variant="secondary"
-          >
-            Export Excel du jour
-          </Button>
+      <div style={{
+        background: '#fff',
+        borderRadius: '16px',
+        border: '1px solid var(--bord)',
+        padding: '20px 24px',
+        boxShadow: 'var(--shadow)',
+      }}>
+        <div style={{
+          fontSize: '12px',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          color: 'var(--brown3)',
+          marginBottom: '14px',
+        }}>
+          Actions rapides
         </div>
 
-        {/* Feedback résultat */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }} className="quick-grid">
+          {/* Valider tout */}
+          <button style={actionStyle} onClick={() => setModal('valider')}>
+            <span style={{ fontSize: '22px' }}>✅</span>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--brown)' }}>Valider toutes</div>
+              <div style={{ fontSize: '11px', color: 'var(--brown3)' }}>Commandes OK → WhatsApp</div>
+            </div>
+          </button>
+
+          {/* Export */}
+          <button style={actionStyle} onClick={() => setModal('export')}>
+            <span style={{ fontSize: '22px' }}>📊</span>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--brown)' }}>Export Excel</div>
+              <div style={{ fontSize: '11px', color: 'var(--brown3)' }}>Ventes du jour</div>
+            </div>
+          </button>
+        </div>
+
         {result && !result.error && (
-          <div className="mt-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
-            {result.success} commande(s) validée(s){result.total !== undefined ? ` sur ${result.total} éligible(s)` : ''}.
+          <div style={{
+            marginTop: '12px',
+            padding: '10px 14px',
+            background: 'rgba(26,122,94,0.08)',
+            border: '1px solid rgba(26,122,94,0.2)',
+            borderRadius: '10px',
+            fontSize: '13px',
+            color: 'var(--teal)',
+          }}>
+            🎉 {result.success} commande(s) validée(s)
           </div>
         )}
         {result?.error && (
-          <div className="mt-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {result.error}
+          <div style={{
+            marginTop: '12px',
+            padding: '10px 14px',
+            background: 'rgba(180,48,48,0.08)',
+            border: '1px solid rgba(180,48,48,0.2)',
+            borderRadius: '10px',
+            fontSize: '13px',
+            color: 'var(--red)',
+          }}>
+            ⚠ {result.error}
           </div>
         )}
       </div>
 
-      {/* Modal : Valider tout */}
-      <Modal
-        title="Valider toutes les commandes"
-        open={modal === 'valider'}
-        onClose={() => !loading && setModal(null)}
-        onConfirm={handleValiderTout}
-        confirmLabel="Valider et envoyer WhatsApp"
-        loading={loading}
-      >
-        <p>
-          Toutes les commandes <strong>À traiter</strong> sans alerte seront :
-        </p>
-        <ul className="list-disc ml-4 mt-2 space-y-1">
-          <li>Passées au statut <strong>Validée</strong></li>
-          <li>Le client recevra un message WhatsApp de confirmation</li>
-        </ul>
-        <p className="mt-3 text-xs text-gray-500">
-          Conditions d&apos;éligibilité : confiance high ou medium, aucun champ manquant, pas d&apos;escalade.
-        </p>
+      <Modal title="✅ Valider toutes les commandes" open={modal === 'valider'}
+        onClose={() => !loading && setModal(null)} onConfirm={handleValiderTout}
+        confirmLabel="Valider + envoyer WhatsApp" loading={loading}>
+        Toutes les commandes <strong>À traiter</strong> (confiance high/medium, sans escalade, sans champ manquant) seront validées et le client recevra un message de confirmation WhatsApp.
       </Modal>
 
-      {/* Modal : Export Excel */}
-      <Modal
-        title="Export Excel du jour"
-        open={modal === 'export'}
-        onClose={() => setModal(null)}
-        onConfirm={handleExportExcel}
-        confirmLabel="Télécharger"
-      >
-        <p>
-          Le fichier Excel contiendra toutes les commandes du jour (hors annulées) avec :
-        </p>
-        <ul className="list-disc ml-4 mt-2 space-y-1">
-          <li>Référence, client, téléphone</li>
-          <li>Produits, quantités, montant</li>
-          <li>Lieu, horaire, statut, note</li>
-        </ul>
+      <Modal title="📊 Export Excel du jour" open={modal === 'export'}
+        onClose={() => setModal(null)} onConfirm={handleExport} confirmLabel="Télécharger">
+        Le fichier contiendra toutes les commandes du jour avec référence, client, produits, montant, lieu et statut.
       </Modal>
     </>
   )

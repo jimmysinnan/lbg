@@ -104,3 +104,20 @@ body::after {
   color: var(--cara3);
   border: 1px solid rgba(196,98,26,0.25);
 }
+
+/* ── Responsive grilles ────────────────────────── */
+@media (max-width: 768px) {
+  .kpi-grid   { grid-template-columns: repeat(2, 1fr) !important; }
+  .pipeline-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .quick-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  .kpi-grid   { grid-template-columns: 1fr 1fr !important; }
+}
+
+/* ── Pipeline card hover ───────────────────────── */
+.pipeline-card:hover {
+  border-color: var(--caramel) !important;
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}

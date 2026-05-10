@@ -1,46 +1,127 @@
+import Link from 'next/link'
 import { StatusBadge } from '@/components/commandes/StatusBadge'
 import type { Order, OrderStatus } from '@/types'
 
-const PIPELINE_COLUMNS: OrderStatus[] = ['a_traiter', 'validee', 'en_preparation', 'prete']
+const COLUMNS: { status: OrderStatus; accent: string }[] = [
+  { status: 'a_traiter',      accent: 'var(--gold)' },
+  { status: 'validee',        accent: 'var(--sky)' },
+  { status: 'en_preparation', accent: 'var(--cara2)' },
+  { status: 'prete',          accent: 'var(--teal)' },
+]
 
-interface OrderPipelineProps {
-  orders: Order[]
-}
-
-export function OrderPipeline({ orders }: OrderPipelineProps) {
-  const byStatus = (status: OrderStatus) => orders.filter(o => o.status === status)
+export function OrderPipeline({ orders }: { orders: Order[] }) {
+  const byStatus = (s: OrderStatus) => orders.filter(o => o.status === s)
 
   return (
-    <div className="grid grid-cols-4 gap-3">
-      {PIPELINE_COLUMNS.map(status => {
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '12px',
+      overflowX: 'auto',
+      minWidth: 0,
+    }}
+    className="pipeline-grid"
+    >
+      {COLUMNS.map(({ status, accent }) => {
         const col = byStatus(status)
         return (
-          <div key={status} className="bg-gray-50 rounded-lg border border-gray-200 p-3">
-            <div className="flex items-center justify-between mb-2">
+          <div key={status} style={{
+            background: '#fff',
+            borderRadius: '14px',
+            border: '1px solid var(--bord)',
+            overflow: 'hidden',
+            boxShadow: 'var(--shadow)',
+          }}>
+            {/* Header colonne */}
+            <div style={{
+              padding: '12px 14px',
+              borderBottom: `2px solid ${accent}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--cream2)',
+            }}>
               <StatusBadge status={status} />
-              <span className="text-sm font-bold text-gray-700">{col.length}</span>
+              <span style={{
+                fontFamily: 'var(--fraunces)',
+                fontSize: '20px',
+                fontWeight: 900,
+                color: accent,
+                lineHeight: 1,
+              }}>
+                {col.length}
+              </span>
             </div>
-            <div className="space-y-2">
+
+            {/* Cards */}
+            <div style={{ padding: '10px', minHeight: '80px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {col.map(order => (
-                <a
-                  key={order.id}
-                  href={`/commandes/${order.id}`}
-                  className="block bg-white rounded border border-gray-200 p-2 text-xs hover:border-blue-300 transition-colors"
+                <Link key={order.id} href={`/commandes/${order.id}`} style={{
+                  display: 'block',
+                  background: 'var(--cream)',
+                  borderRadius: '10px',
+                  padding: '10px 12px',
+                  border: '1px solid var(--bord)',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s',
+                }}
+                className="pipeline-card"
                 >
-                  <div className="font-semibold text-gray-900 truncate">{order.reference}</div>
-                  <div className="text-gray-500 truncate mt-0.5">
-                    {order.customer_name ?? order.customer_phone ?? 'Client inconnu'}
+                  <div style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: 'var(--brown)',
+                    fontFamily: 'var(--mono)',
+                    letterSpacing: '0.03em',
+                  }}>
+                    {order.reference}
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'var(--brown3)',
+                    marginTop: '2px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {order.customer_name ?? order.customer_phone ?? 'Client'}
                   </div>
                   {order.total_amount && (
-                    <div className="text-gray-700 font-medium mt-0.5">{Number(order.total_amount).toFixed(2)}€</div>
+                    <div style={{
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      color: 'var(--caramel)',
+                      marginTop: '4px',
+                      fontFamily: 'var(--fraunces)',
+                    }}>
+                      {Number(order.total_amount).toFixed(2)}€
+                    </div>
                   )}
                   {order.escalate && (
-                    <div className="text-red-600 font-medium mt-0.5">⚠ Escalade</div>
+                    <div style={{
+                      fontSize: '10px',
+                      color: 'var(--red)',
+                      fontWeight: 600,
+                      marginTop: '3px',
+                    }}>
+                      ⚠ Escalade
+                    </div>
                   )}
-                </a>
+                </Link>
               ))}
               {col.length === 0 && (
-                <div className="text-xs text-gray-400 text-center py-6">—</div>
+                <div style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  color: 'rgba(58,37,16,0.2)',
+                  padding: '20px 0',
+                  fontStyle: 'italic',
+                }}>
+                  Vide
+                </div>
               )}
             </div>
           </div>
