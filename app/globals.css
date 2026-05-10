@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700;1,9..144,900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
 
 /* ── LBG Design Tokens ─────────────────────────────── */
 :root {
@@ -89,3 +89,18 @@ body::after {
 }
 
 .animate-fade-up { animation: fadeUp 0.22s ease both; }
+
+/* ── Sidebar nav ───────────────────────────────────── */
+.lbg-nav-item {
+  color: rgba(255,255,255,0.48);
+  font-family: var(--sans);
+}
+.lbg-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.88);
+}
+.lbg-nav-item.active {
+  background: rgba(196,98,26,0.2);
+  color: var(--cara3);
+  border: 1px solid rgba(196,98,26,0.25);
+}

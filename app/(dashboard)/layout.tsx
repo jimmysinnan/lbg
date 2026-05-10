@@ -46,19 +46,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150"
-              style={{
-                color: 'rgba(255,255,255,0.5)',
-                fontFamily: 'var(--sans)',
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)'
-                ;(e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.85)'
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = 'transparent'
-                ;(e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)'
-              }}
+              className="lbg-nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150"
             >
               <span style={{ fontSize: '16px', opacity: 0.7 }}>{item.icon}</span>
               {item.label}
