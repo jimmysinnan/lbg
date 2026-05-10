@@ -5,19 +5,22 @@ interface BadgeProps {
   variant?: BadgeVariant
 }
 
-const variants: Record<BadgeVariant, string> = {
-  default: 'bg-gray-100 text-gray-700',
-  green: 'bg-green-100 text-green-700',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  red: 'bg-red-100 text-red-700',
-  blue: 'bg-blue-100 text-blue-700',
-  gray: 'bg-gray-100 text-gray-500',
-  orange: 'bg-orange-100 text-orange-700',
+const variantStyles: Record<BadgeVariant, React.CSSProperties> = {
+  default: { background: 'rgba(58,37,16,0.08)',  color: 'var(--brown3)' },
+  green:   { background: 'rgba(26,122,94,0.1)',  color: 'var(--teal)' },
+  yellow:  { background: 'rgba(212,160,48,0.12)', color: 'var(--gold)' },
+  red:     { background: 'rgba(180,48,48,0.1)',  color: 'var(--red)' },
+  blue:    { background: 'rgba(26,104,180,0.1)', color: 'var(--sky)' },
+  gray:    { background: 'rgba(58,37,16,0.05)',  color: 'var(--brown4)' },
+  orange:  { background: 'rgba(196,98,26,0.1)',  color: 'var(--caramel)' },
 }
 
 export function Badge({ label, variant = 'default' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${variants[variant]}`}>
+    <span
+      className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold"
+      style={{ fontFamily: 'var(--sans)', ...variantStyles[variant] }}
+    >
       {label}
     </span>
   )

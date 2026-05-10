@@ -4,15 +4,36 @@ interface KPICardProps {
   delta?: string
   deltaPositive?: boolean
   highlight?: boolean
+  accent?: 'caramel' | 'teal' | 'rose' | 'sky'
 }
 
-export function KPICard({ label, value, delta, deltaPositive, highlight = false }: KPICardProps) {
+const accentColors = {
+  caramel: 'var(--caramel)',
+  teal:    'var(--teal)',
+  rose:    'var(--rose)',
+  sky:     'var(--sky)',
+}
+
+export function KPICard({ label, value, delta, deltaPositive, highlight, accent = 'caramel' }: KPICardProps) {
+  const color = accentColors[accent]
   return (
-    <div className={`bg-white rounded-lg border p-4 ${highlight ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200'}`}>
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</div>
-      <div className="mt-1 text-2xl font-bold text-gray-900">{value}</div>
+    <div
+      className="rounded-xl p-4 transition-all duration-200"
+      style={{
+        background: '#fff',
+        border: '1px solid var(--bord)',
+        borderTop: `3px solid ${color}`,
+        boxShadow: highlight ? 'var(--shadow-md)' : 'var(--shadow)',
+      }}
+    >
+      <div className="text-xs font-medium mb-2" style={{ color: 'var(--brown3)', letterSpacing: '0.03em' }}>
+        {label}
+      </div>
+      <div className="text-3xl font-black leading-none mb-1" style={{ fontFamily: 'var(--fraunces)', color }}>
+        {value}
+      </div>
       {delta && (
-        <div className={`mt-1 text-xs font-medium ${deltaPositive ? 'text-green-600' : 'text-amber-600'}`}>
+        <div className="text-xs mt-1.5" style={{ color: deltaPositive ? 'var(--teal)' : 'var(--red)' }}>
           {delta}
         </div>
       )}

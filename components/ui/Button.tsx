@@ -8,11 +8,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize
 }
 
-const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-600',
-  secondary: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50',
-  danger: 'bg-red-600 text-white hover:bg-red-700 border border-red-600',
-  ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border border-transparent',
+const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
+  primary:   { background: 'var(--caramel)', color: '#fff', border: '1px solid var(--caramel)' },
+  secondary: { background: '#fff', color: 'var(--brown2)', border: '1px solid var(--bord2)' },
+  danger:    { background: 'var(--red)', color: '#fff', border: '1px solid var(--red)' },
+  ghost:     { background: 'transparent', color: 'var(--brown3)', border: '1px solid transparent' },
 }
 
 const sizes: Record<ButtonSize, string> = {
@@ -24,12 +24,14 @@ export function Button({
   variant = 'primary',
   size = 'md',
   className = '',
+  style,
   children,
   ...props
 }: ButtonProps) {
   return (
     <button
-      className={`inline-flex items-center gap-1.5 rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-lg font-medium transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed ${sizes[size]} ${className}`}
+      style={{ fontFamily: 'var(--sans)', ...variantStyles[variant], ...style }}
       {...props}
     >
       {children}

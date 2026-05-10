@@ -37,26 +37,22 @@ export default async function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-4 gap-4">
-        <KPICard
-          label="Commandes aujourd'hui"
-          value={orders.length}
-        />
-        <KPICard
-          label="CA estimé du jour"
-          value={`${ca.toFixed(2)}€`}
-        />
+        <KPICard label="Commandes aujourd'hui" value={orders.length} accent="caramel" />
+        <KPICard label="CA estimé du jour" value={`${ca.toFixed(2)}€`} accent="teal" />
         <KPICard
           label="À traiter"
           value={aTraiter}
+          accent="sky"
           highlight={aTraiter > 0}
-          delta={aTraiter > 0 ? `${aTraiter} en attente de validation` : 'Tout est traité'}
+          delta={aTraiter > 0 ? `${aTraiter} en attente` : 'Tout traité'}
           deltaPositive={aTraiter === 0}
         />
         <KPICard
           label="Escalades"
           value={escalades}
+          accent="rose"
           highlight={escalades > 0}
-          delta={escalades > 0 ? 'Nécessitent attention' : 'Aucune escalade'}
+          delta={escalades > 0 ? 'Attention requise' : 'Aucune escalade'}
           deltaPositive={escalades === 0}
         />
       </div>
